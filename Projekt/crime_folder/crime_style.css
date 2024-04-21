@@ -1,0 +1,27 @@
+/* This applies to all text within the body tag */
+body {
+    background-color: black; /* Example background color */
+    color: white; /* This will make the text white */
+}
+
+/* This applies to all links */
+a {
+    color: white; /* This will make link text white */
+    text-decoration: none; /* This removes the underline from links */
+}
+
+/* You can add other element selectors here if needed */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('crime_pictures/background.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(50%);
+    z-index: -1;
+  }

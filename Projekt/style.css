@@ -1,0 +1,84 @@
+.cursive {
+    font-family: cursive; 
+}
+
+body, h1, h2, h3, h4, p, a, .cursive {
+    color: white; /* Sets the text color to white */
+}
+
+a {
+    text-decoration: none; /* Removes underline from links */
+    color: white; /* Ensures that links are white */
+}
+
+header {
+    text-align: center;
+    border-bottom: 2px solid #ffffff; /* Adds a line under the header */
+    padding-bottom: 20px; /* Adds some space below the header text */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('main_pictures/background.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(50%);
+    z-index: -1;
+  }
+  
+
+h3 {
+    text-align: center;
+    margin-top: 20px; /* Adds space between the header and the Fictions title */
+}
+
+h4 {
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around; /* Spaces out the buttons evenly */
+    align-items: center;
+    flex-direction: row; /* Changes direction from column to row */
+    margin-top: 20px; /* Adds space between the Fictions title and the buttons */
+}
+
+.genre-button {
+    text-decoration: none; /* Removes the underline from links */
+    color: inherit; /* The color of the text will be the same as the parent element */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.genre-button div {
+    font-weight: bold;
+    margin-bottom: 10px; /* Adjust the space between text and image as needed */
+}
+
+.button-container div {
+    margin: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-container div div {
+    margin-top: 10px;
+    font-weight: bold; /* Makes the text bold */
+}
+
+.button-container img {
+    width: 300px; /* Adjust size as needed */
+    height: auto;
+    cursor: pointer; /* Makes the cursor indicate clickable */
+}
