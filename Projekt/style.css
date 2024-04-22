@@ -3,23 +3,23 @@
 }
 
 body, h1, h2, h3, h4, p, a, .cursive {
-    color: white; /* Sets the text color to white */
+    color: white; 
 }
 
 a {
-    text-decoration: none; /* Removes underline from links */
-    color: white; /* Ensures that links are white */
+    text-decoration: none;
+    color: white; 
 }
 
 header {
     text-align: center;
-    border-bottom: 2px solid #ffffff; /* Adds a line under the header */
-    padding-bottom: 20px; /* Adds some space below the header text */
+    border-bottom: 2px solid #ffffff; 
+    padding-bottom: 20px; 
 }
 
 body::before {
     content: "";
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
@@ -35,7 +35,7 @@ body::before {
 
 h3 {
     text-align: center;
-    margin-top: 20px; /* Adds space between the header and the Fictions title */
+    margin-top: 20px; 
 }
 
 h4 {
@@ -44,15 +44,15 @@ h4 {
 
 .button-container {
     display: flex;
-    justify-content: space-around; /* Spaces out the buttons evenly */
+    justify-content: space-around; 
     align-items: center;
-    flex-direction: row; /* Changes direction from column to row */
-    margin-top: 20px; /* Adds space between the Fictions title and the buttons */
+    flex-direction: row; 
+    margin-top: 20px; 
 }
 
 .genre-button {
-    text-decoration: none; /* Removes the underline from links */
-    color: inherit; /* The color of the text will be the same as the parent element */
+    text-decoration: none; 
+    color: inherit; 
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -61,7 +61,7 @@ h4 {
 
 .genre-button div {
     font-weight: bold;
-    margin-bottom: 10px; /* Adjust the space between text and image as needed */
+    margin-bottom: 10px; 
 }
 
 .button-container div {
@@ -74,11 +74,11 @@ h4 {
 
 .button-container div div {
     margin-top: 10px;
-    font-weight: bold; /* Makes the text bold */
+    font-weight: bold;
 }
 
 .button-container img {
-    width: 300px; /* Adjust size as needed */
+    width: 300px; 
     height: auto;
-    cursor: pointer; /* Makes the cursor indicate clickable */
+    cursor: pointer; 
 }
