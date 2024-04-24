@@ -1,0 +1,112 @@
+.cursive {
+    font-family: cursive; 
+}
+
+header {
+    text-align: center;
+    border-bottom: 2px solid #ffffff; 
+    padding-bottom: 20px; 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: black; 
+    color: white;  
+}
+
+a {
+    color: white; 
+    text-decoration: none; 
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('fantasy_pictures/background.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(50%);
+    z-index: -1;
+  }
+
+.book-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    align-items: center;
+}
+
+.book-image img {
+    width: 100%;
+    height: auto;
+    border: 1px solid white; 
+}
+
+.book-details {
+    padding: 0 15px;
+}
+
+.book-title {
+    margin: 0;
+    color: #ffffff;
+}
+
+.book-author {
+    margin: 0;
+    font-weight: normal;
+    text-align: right; 
+    font-family: cursive; 
+    color: #ffffff;
+}
+
+.book-description {
+    margin-top: 15px;
+    color: #ffffff;
+}
+
+.book-purchase {
+    text-align: right;
+    padding: 0 15px;
+}
+
+.book-price {
+    margin: 0;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.buy-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff9900;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.buy-button:hover {
+    background-color: #e68a00;
+}
+
+.back-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; 
+}
+
+.back-button img {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+
+}
