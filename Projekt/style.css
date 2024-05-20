@@ -82,3 +82,38 @@ h4 {
     height: auto;
     cursor: pointer; 
 }
+
+/* Add this to your existing style.css */
+
+/* Center the login button and make it bigger */
+.login-container {
+    text-align: center;
+    margin-top: 20px; /* Adjust the margin to position it below the content */
+}
+
+.login-button {
+    padding: 10px 20px; /* Increase the padding for a bigger button */
+    font-size: 16px; /* Increase the font size */
+    background-color: #f6f6f6; /* Optional: Add background color */
+    color: black; /* Optional: Change text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #f6f6f6; /* Optional: Add hover effect */
+}
+
+.back-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; 
+}
+
+.back-button img {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+
+}
