@@ -144,3 +144,32 @@ button {
 button:hover {
     background-color: #555;
 }
+
+#user-reviews {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#reviews-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+#reviews-table th, #reviews-table td {
+    padding: 10px;
+    text-align: center;
+    color: black; /* Change text color to black */
+}
+
+#reviews-table th {
+    background-color: #333;
+    color: white;
+}
+
+#reviews-table td {
+    background-color: #f4f4f4;
+}

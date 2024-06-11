@@ -8,6 +8,18 @@ Projekt jest biblioteką książek z linkami do stron internetowych, gdzie możn
 
 ### Możliwości aplikacji:
 
-* Logowanie i tworzenie konta użytkownika
+* Logowanie i tworzenie konta użytkownika 
 
-* Pisanie i edycja recenzji dla każdej książki (jeżeli użytkownik jest zalogowany/zarejestrowany)
+* Przypomnienie hasła dla zaregestrowanych użytkowników
+
+* Sprawdzenie poprawności danych przy logowaniu / regestracji 
+ 	if user already exists and trying to signup with this username , tell about it
+	if user wrote a wrong password; 
+	if there is no username, but it tries to login with it
+	if password and confirm password in signup are not the same)
+
+* Pisanie, edycja i usuwanie recenzji dla każdej książki (jeżeli użytkownik jest zalogowany/zarejestrowany)
+
+* System umożliwia zalogowanym użytkownikom wyświetlanie wszystkich recenzji, ktore oni napisali
+
+

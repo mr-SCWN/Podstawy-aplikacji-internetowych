@@ -71,6 +71,23 @@
     <div id="welcome" style="display:none;">
         <h2>Welcome, <span id="user-name"></span>!</h2>
         <button onclick="logout()">Sign Out</button>
+        <button onclick="showUserReviews()">Show My Reviews</button>
+    </div>
+
+    <div id="user-reviews" style="display:none;">
+        <h2>My Reviews</h2>
+        <table id="reviews-table" border="1">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Mark</th>
+                    <th>Opinion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Entries will be added here dynamically -->
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -120,17 +137,30 @@
             var username = document.getElementById('login-username').value;
             var password = document.getElementById('login-password').value;
 
-            // Handle login with Firebase
-            firebase.auth().signInWithEmailAndPassword(username + "@example.com", password)
-                .then((userCredential) => {
-                    var user = userCredential.user;
-                    document.getElementById('user-name').innerText = username;
-                    document.getElementById('login-form').style.display = 'none';
-                    document.getElementById('signup-form').style.display = 'none';
-                    document.getElementById('welcome').style.display = 'block';
+            // Check if username exists
+            db.collection("users").where("username", "==", username).get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        alert("No user found with this username.");
+                        return;
+                    }
+
+                    // Handle login with Firebase
+                    firebase.auth().signInWithEmailAndPassword(username + "@example.com", password)
+                        .then((userCredential) => {
+                            var user = userCredential.user;
+                            document.getElementById('user-name').innerText = username;
+                            document.getElementById('login-form').style.display = 'none';
+                            document.getElementById('signup-form').style.display = 'none';
+                            document.getElementById('welcome').style.display = 'block';
+                        })
+                        .catch((error) => {
+                            alert("Wrong password.");
+                            console.error("Error logging in: ", error);
+                        });
                 })
                 .catch((error) => {
-                    console.error("Error logging in: ", error);
+                    console.error("Error checking username: ", error);
                 });
         }
 
@@ -147,30 +177,42 @@
                 return;
             }
 
-            // Handle sign up with Firebase
-            firebase.auth().createUserWithEmailAndPassword(username + "@example.com", password)
-                .then((userCredential) => {
-                    var user = userCredential.user;
-                    // Save user information in Firestore
-                    db.collection("users").doc(user.uid).set({
-                        username: username,
-                        firstname: firstname,
-                        lastname: lastname,
-                        email: email,
-                        password: password  // Storing password is not recommended
-                    })
-                    .then(() => {
-                        document.getElementById('user-name').innerText = username;
-                        document.getElementById('login-form').style.display = 'none';
-                        document.getElementById('signup-form').style.display = 'none';
-                        document.getElementById('welcome').style.display = 'block';
-                    })
-                    .catch((error) => {
-                        console.error("Error saving user information: ", error);
-                    });
+            // Check if username already exists
+            db.collection("users").where("username", "==", username).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        alert("Username already exists.");
+                        return;
+                    }
+
+                    // Handle sign up with Firebase
+                    firebase.auth().createUserWithEmailAndPassword(username + "@example.com", password)
+                        .then((userCredential) => {
+                            var user = userCredential.user;
+                            // Save user information in Firestore
+                            db.collection("users").doc(user.uid).set({
+                                username: username,
+                                firstname: firstname,
+                                lastname: lastname,
+                                email: email,
+                                password: password  // Storing password is not recommended
+                            })
+                            .then(() => {
+                                document.getElementById('user-name').innerText = username;
+                                document.getElementById('login-form').style.display = 'none';
+                                document.getElementById('signup-form').style.display = 'none';
+                                document.getElementById('welcome').style.display = 'block';
+                            })
+                            .catch((error) => {
+                                console.error("Error saving user information: ", error);
+                            });
+                        })
+                        .catch((error) => {
+                            console.error("Error signing up: ", error);
+                        });
                 })
                 .catch((error) => {
-                    console.error("Error signing up: ", error);
+                    console.error("Error checking username: ", error);
                 });
         }
 
@@ -206,6 +248,36 @@
             }).catch((error) => {
                 console.error("Error signing out: ", error);
             });
+        }
+
+        function showUserReviews() {
+            var user = firebase.auth().currentUser;
+            if (user) {
+                var reviewsTable = document.getElementById('reviews-table').getElementsByTagName('tbody')[0];
+                reviewsTable.innerHTML = ''; // Clear existing reviews
+                db.collection("reviews").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        var reviews = doc.data().reviews;
+                        reviews.forEach((review) => {
+                            if (review.uid === user.uid) {
+                                var newRow = reviewsTable.insertRow();
+                                var bookCell = newRow.insertCell(0);
+                                var markCell = newRow.insertCell(1);
+                                var opinionCell = newRow.insertCell(2);
+
+                                bookCell.innerHTML = `<strong>${doc.id}</strong>`;
+                                markCell.innerHTML = `<strong>${review.mark}</strong>`;
+                                opinionCell.innerHTML = `<strong>${review.opinion}</strong>`;
+                            }
+                        });
+                    });
+                    document.getElementById('user-reviews').style.display = 'block';
+                }).catch((error) => {
+                    console.error("Error retrieving reviews: ", error);
+                });
+            } else {
+                alert("You must be logged in to see your reviews.");
+            }
         }
     </script>
 
