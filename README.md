@@ -23,3 +23,6 @@ Projekt jest biblioteką książek, gdzie można przeczytać opis książki i na
 * System umożliwia zalogowanym użytkownikom wyświetlanie wszystkich recenzji, ktore oni napisali
 
 
+## Live Demo
+
+[Click here to view the live application](https://mr-SCWN.github.io/Podstawy-aplikacji-internetowych/)
