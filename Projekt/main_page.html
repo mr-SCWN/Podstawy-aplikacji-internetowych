@@ -53,6 +53,7 @@
         <input type="password" id="login-password" placeholder="Password" required>
         <button onclick="login()">Login</button>
         <button onclick="showSignUp()">Sign Up</button>
+        <button onclick="rememberPassword()">Remember Password</button>
     </div>
 
     <div id="signup-form" class="form-container" style="display:none;">
@@ -155,7 +156,8 @@
                         username: username,
                         firstname: firstname,
                         lastname: lastname,
-                        email: email
+                        email: email,
+                        password: password  // Storing password is not recommended
                     })
                     .then(() => {
                         document.getElementById('user-name').innerText = username;
@@ -172,6 +174,31 @@
                 });
         }
 
+        function rememberPassword() {
+            var username = document.getElementById('login-username').value;
+
+            if (!username) {
+                alert("Please enter your username.");
+                return;
+            }
+
+            // Retrieve user's password from Firestore
+            db.collection("users").where("username", "==", username).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        querySnapshot.forEach((doc) => {
+                            var userData = doc.data();
+                            alert("Your password is: " + userData.password); // Display the password
+                        });
+                    } else {
+                        alert("No user found with this username.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error retrieving password: ", error);
+                });
+        }
+
         function logout() {
             firebase.auth().signOut().then(() => {
                 document.getElementById('welcome').style.display = 'none';
@@ -181,5 +208,6 @@
             });
         }
     </script>
+
 </body>
 </html>
