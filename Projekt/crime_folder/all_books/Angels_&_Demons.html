@@ -143,8 +143,22 @@
             email: user.email
         };
 
-        saveReview(bookId, review);
-        document.getElementById('reviewForm').reset();
+        let reviewsRef = firebase.firestore().collection('reviews').doc(bookId);
+        reviewsRef.get().then((doc) => {
+            if (doc.exists) {
+                let reviews = doc.data().reviews;
+                let reviewIndex = reviews.findIndex(r => r.uid === user.uid);
+                if (reviewIndex !== -1) {
+                    alert('You have already written a review for this book.');
+                    return;
+                }
+                reviews.push(review);
+                reviewsRef.set({ reviews: reviews });
+            } else {
+                reviewsRef.set({ reviews: [review] });
+            }
+            loadReviews();
+        });
     });
 
     function saveReview(bookId, review) {

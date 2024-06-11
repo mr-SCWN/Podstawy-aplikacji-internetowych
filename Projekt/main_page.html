@@ -24,262 +24,389 @@
         <div>
             <a href="fantasy_folder/fantasy_page.html">
                 <div>Fantasy</div>
-                <img src="main_pictures/fantasy.webp" alt="Fantasy">
-            </a>
+                    <img src="main_pictures/fantasy.webp" alt="Fantasy">
+                </a>
+            </div>
+    
+            <div>
+                <a href="horror_folder/horror_page.html">
+                    <div>Horror</div>
+                    <img src="main_pictures/horror.webp" alt="Horror">
+                </a>
+            </div>
+    
+            <div>
+                <a href="crime_folder/crime_page.html">
+                    <div>Crime</div>
+                    <img src="main_pictures/crime.webp" alt="Crime">
+                </a>
+            </div>
         </div>
-
-        <div>
-            <a href="horror_folder/horror_page.html">
-                <div>Horror</div>
-                <img src="main_pictures/horror.webp" alt="Horror">
-            </a>
+    
+        <h4>
+            Here you can choose one of 3 fictions, I believe you will find a book for you
+        </h4>
+    
+        <div id="login-form" class="form-container">
+            <h2>Login</h2>
+            <input type="text" id="login-username" placeholder="Username" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <button onclick="showSignUp()">Sign Up</button>
+            <button onclick="rememberPassword()">Remember Password</button>
         </div>
-
-        <div>
-            <a href="crime_folder/crime_page.html">
-                <div>Crime</div>
-                <img src="main_pictures/crime.webp" alt="Crime">
-            </a>
+    
+        <div id="signup-form" class="form-container" style="display:none;">
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-username" placeholder="Username" required>
+            <input type="text" id="signup-firstname" placeholder="First Name" required>
+            <input type="text" id="signup-lastname" placeholder="Last Name" required>
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <input type="password" id="signup-confirmpassword" placeholder="Confirm Password" required>
+            <button onclick="signUp()">Sign Up</button>
+            <button onclick="showLogin()">Back to Login</button>
         </div>
-    </div>
-
-    <h4>
-        Here you can choose one of 3 fictions, I believe you will find a book for you
-    </h4>
-
-    <div id="login-form" class="form-container">
-        <h2>Login</h2>
-        <input type="text" id="login-username" placeholder="Username" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button onclick="login()">Login</button>
-        <button onclick="showSignUp()">Sign Up</button>
-        <button onclick="rememberPassword()">Remember Password</button>
-    </div>
-
-    <div id="signup-form" class="form-container" style="display:none;">
-        <h2>Sign Up</h2>
-        <input type="text" id="signup-username" placeholder="Username" required>
-        <input type="text" id="signup-firstname" placeholder="First Name" required>
-        <input type="text" id="signup-lastname" placeholder="Last Name" required>
-        <input type="email" id="signup-email" placeholder="Email" required>
-        <input type="password" id="signup-password" placeholder="Password" required>
-        <input type="password" id="signup-confirmpassword" placeholder="Confirm Password" required>
-        <button onclick="signUp()">Sign Up</button>
-        <button onclick="showLogin()">Back to Login</button>
-    </div>
-
-    <div id="welcome" style="display:none;">
-        <h2>Welcome, <span id="user-name"></span>!</h2>
-        <button onclick="logout()">Sign Out</button>
-        <button onclick="showUserReviews()">Show My Reviews</button>
-    </div>
-
-    <div id="user-reviews" style="display:none;">
-        <h2>My Reviews</h2>
-        <table id="reviews-table" border="1">
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th>Mark</th>
-                    <th>Opinion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Entries will be added here dynamically -->
-            </tbody>
-        </table>
-    </div>
-
-    <script>
-        // Your Firebase configuration object
-        const firebaseConfig = {
-            apiKey: "AIzaSyA-WIh8GxieOvLfcsa0QrL29GgrJWLdoug",
-            authDomain: "bookslibrary-885e3.firebaseapp.com",
-            projectId: "bookslibrary-885e3",
-            storageBucket: "bookslibrary-885e3.appspot.com",
-            messagingSenderId: "767459073549",
-            appId: "1:767459073549:web:736693063c0ccd654cff44",
-            measurementId: "G-LVF1C9385Y"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        var db = firebase.firestore();
-
-        // Check if the user is logged in when the page loads
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in, show the welcome message
-                var username = user.email.split('@')[0]; // Assuming username is the part before '@'
-                document.getElementById('user-name').innerText = username;
+    
+        <div id="welcome" style="display:none;">
+            <h2>Welcome, <span id="user-name"></span>!</h2>
+            <button onclick="logout()">Sign Out</button>
+            <button onclick="toggleUserReviews()">Show My Reviews</button>
+        </div>
+    
+        <div id="user-reviews" style="display:none;">
+            <h2>My Reviews</h2>
+            <div class="search-container">
+                <label for="search-book">Search by Book Name:</label>
+                <input type="text" id="search-book" placeholder="Book Name">
+                <button onclick="searchReviewsByBook()">Search</button>
+                <button onclick="clearSearch('search-book')">Clear</button>
+            </div>
+            <div class="search-container">
+                <label for="search-opinion">Search by Opinion:</label>
+                <input type="text" id="search-opinion" placeholder="Opinion">
+                <button onclick="searchReviewsByOpinion()">Search</button>
+                <button onclick="clearSearch('search-opinion')">Clear</button>
+            </div>
+            <div class="search-container">
+                <label for="search-mark">Search by Mark:</label>
+                <input type="number" id="search-mark" placeholder="Mark">
+                <button onclick="searchReviewsByMark()">Search</button>
+                <button onclick="clearSearch('search-mark')">Clear</button>
+            </div>
+            <table id="reviews-table" border="1">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Mark</th>
+                        <th>Opinion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Entries will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    
+        <script>
+            // Your Firebase configuration object
+            const firebaseConfig = {
+                apiKey: "AIzaSyA-WIh8GxieOvLfcsa0QrL29GgrJWLdoug",
+                authDomain: "bookslibrary-885e3.firebaseapp.com",
+                projectId: "bookslibrary-885e3",
+                storageBucket: "bookslibrary-885e3.appspot.com",
+                messagingSenderId: "767459073549",
+                appId: "1:767459073549:web:736693063c0ccd654cff44",
+                measurementId: "G-LVF1C9385Y"
+            };
+    
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            var db = firebase.firestore();
+    
+            // Check if the user is logged in when the page loads
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    // User is signed in, show the welcome message
+                    var username = user.email.split('@')[0]; // Assuming username is the part before '@'
+                    document.getElementById('user-name').innerText = username;
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('signup-form').style.display = 'none';
+                    document.getElementById('welcome').style.display = 'block';
+                } else {
+                    // No user is signed in, show the login form
+                    document.getElementById('login-form').style.display = 'block';
+                    document.getElementById('signup-form').style.display = 'none';
+                    document.getElementById('welcome').style.display = 'none';
+                }
+            });
+    
+            function showSignUp() {
                 document.getElementById('login-form').style.display = 'none';
-                document.getElementById('signup-form').style.display = 'none';
-                document.getElementById('welcome').style.display = 'block';
-            } else {
-                // No user is signed in, show the login form
+                document.getElementById('signup-form').style.display = 'block';
+            }
+    
+            function showLogin() {
                 document.getElementById('login-form').style.display = 'block';
                 document.getElementById('signup-form').style.display = 'none';
-                document.getElementById('welcome').style.display = 'none';
             }
-        });
-
-        function showSignUp() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('signup-form').style.display = 'block';
-        }
-
-        function showLogin() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('signup-form').style.display = 'none';
-        }
-
-        function login() {
-            var username = document.getElementById('login-username').value;
-            var password = document.getElementById('login-password').value;
-
-            // Check if username exists
-            db.collection("users").where("username", "==", username).get()
-                .then((querySnapshot) => {
-                    if (querySnapshot.empty) {
-                        alert("No user found with this username.");
-                        return;
-                    }
-
-                    // Handle login with Firebase
-                    firebase.auth().signInWithEmailAndPassword(username + "@example.com", password)
-                        .then((userCredential) => {
-                            var user = userCredential.user;
-                            document.getElementById('user-name').innerText = username;
-                            document.getElementById('login-form').style.display = 'none';
-                            document.getElementById('signup-form').style.display = 'none';
-                            document.getElementById('welcome').style.display = 'block';
-                        })
-                        .catch((error) => {
-                            alert("Wrong password.");
-                            console.error("Error logging in: ", error);
-                        });
-                })
-                .catch((error) => {
-                    console.error("Error checking username: ", error);
-                });
-        }
-
-        function signUp() {
-            var username = document.getElementById('signup-username').value;
-            var firstname = document.getElementById('signup-firstname').value;
-            var lastname = document.getElementById('signup-lastname').value;
-            var email = document.getElementById('signup-email').value;
-            var password = document.getElementById('signup-password').value;
-            var confirmpassword = document.getElementById('signup-confirmpassword').value;
-
-            if (password !== confirmpassword) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-            // Check if username already exists
-            db.collection("users").where("username", "==", username).get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        alert("Username already exists.");
-                        return;
-                    }
-
-                    // Handle sign up with Firebase
-                    firebase.auth().createUserWithEmailAndPassword(username + "@example.com", password)
-                        .then((userCredential) => {
-                            var user = userCredential.user;
-                            // Save user information in Firestore
-                            db.collection("users").doc(user.uid).set({
-                                username: username,
-                                firstname: firstname,
-                                lastname: lastname,
-                                email: email,
-                                password: password  // Storing password is not recommended
-                            })
-                            .then(() => {
+    
+            function login() {
+                var username = document.getElementById('login-username').value;
+                var password = document.getElementById('login-password').value;
+    
+                // Check if username exists
+                db.collection("users").where("username", "==", username).get()
+                    .then((querySnapshot) => {
+                        if (querySnapshot.empty) {
+                            alert("No user found with this username.");
+                            return;
+                        }
+    
+                        // Handle login with Firebase
+                        firebase.auth().signInWithEmailAndPassword(username + "@example.com", password)
+                            .then((userCredential) => {
+                                var user = userCredential.user;
                                 document.getElementById('user-name').innerText = username;
                                 document.getElementById('login-form').style.display = 'none';
                                 document.getElementById('signup-form').style.display = 'none';
                                 document.getElementById('welcome').style.display = 'block';
                             })
                             .catch((error) => {
-                                console.error("Error saving user information: ", error);
+                                alert("Wrong password.");
+                                console.error("Error logging in: ", error);
                             });
-                        })
-                        .catch((error) => {
-                            console.error("Error signing up: ", error);
-                        });
-                })
-                .catch((error) => {
-                    console.error("Error checking username: ", error);
-                });
-        }
-
-        function rememberPassword() {
-            var username = document.getElementById('login-username').value;
-
-            if (!username) {
-                alert("Please enter your username.");
-                return;
+                    })
+                    .catch((error) => {
+                        console.error("Error checking username: ", error);
+                    });
             }
-
-            // Retrieve user's password from Firestore
-            db.collection("users").where("username", "==", username).get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        querySnapshot.forEach((doc) => {
-                            var userData = doc.data();
-                            alert("Your password is: " + userData.password); // Display the password
-                        });
-                    } else {
-                        alert("No user found with this username.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error retrieving password: ", error);
+    
+            function signUp() {
+                var username = document.getElementById('signup-username').value;
+                var firstname = document.getElementById('signup-firstname').value;
+                var lastname = document.getElementById('signup-lastname').value;
+                var email = document.getElementById('signup-email').value;
+                var password = document.getElementById('signup-password').value;
+                var confirmpassword = document.getElementById('signup-confirmpassword').value;
+    
+                if (password !== confirmpassword) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+    
+                // Check if username already exists
+                db.collection("users").where("username", "==", username).get()
+                    .then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            alert("Username already exists.");
+                            return;
+                        }
+    
+                        // Handle sign up with Firebase
+                        firebase.auth().createUserWithEmailAndPassword(username + "@example.com", password)
+                            .then((userCredential) => {
+                                var user = userCredential.user;
+                                // Save user information in Firestore
+                                db.collection("users").doc(user.uid).set({
+                                    username: username,
+                                    firstname: firstname,
+                                    lastname: lastname,
+                                    email: email,
+                                    password: password  // Storing password is not recommended
+                                })
+                                .then(() => {
+                                    document.getElementById('user-name').innerText = username;
+                                    document.getElementById('login-form').style.display = 'none';
+                                    document.getElementById('signup-form').style.display = 'none';
+                                    document.getElementById('welcome').style.display = 'block';
+                                })
+                                .catch((error) => {
+                                    console.error("Error saving user information: ", error);
+                                });
+                            })
+                            .catch((error) => {
+                                console.error("Error signing up: ", error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("Error checking username: ", error);
+                    });
+            }
+    
+            function rememberPassword() {
+                var username = document.getElementById('login-username').value;
+    
+                if (!username) {
+                    alert("Please enter your username.");
+                    return;
+                }
+    
+                // Retrieve user's password from Firestore
+                db.collection("users").where("username", "==", username).get()
+                    .then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            querySnapshot.forEach((doc) => {
+                                var userData = doc.data();
+                                alert("Your password is: " + userData.password); // Display the password
+                            });
+                        } else {
+                            alert("No user found with this username.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error retrieving password: ", error);
+                    });
+            }
+    
+            function logout() {
+                firebase.auth().signOut().then(() => {
+                    document.getElementById('welcome').style.display = 'none';
+                    document.getElementById('login-form').style.display = 'block';
+                }).catch((error) => {
+                    console.error("Error signing out: ", error);
                 });
-        }
-
-        function logout() {
-            firebase.auth().signOut().then(() => {
-                document.getElementById('welcome').style.display = 'none';
-                document.getElementById('login-form').style.display = 'block';
-            }).catch((error) => {
-                console.error("Error signing out: ", error);
-            });
-        }
-
-        function showUserReviews() {
-            var user = firebase.auth().currentUser;
-            if (user) {
-                var reviewsTable = document.getElementById('reviews-table').getElementsByTagName('tbody')[0];
-                reviewsTable.innerHTML = ''; // Clear existing reviews
-                db.collection("reviews").get().then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        var reviews = doc.data().reviews;
-                        reviews.forEach((review) => {
-                            if (review.uid === user.uid) {
-                                var newRow = reviewsTable.insertRow();
-                                var bookCell = newRow.insertCell(0);
-                                var markCell = newRow.insertCell(1);
-                                var opinionCell = newRow.insertCell(2);
-
-                                bookCell.innerHTML = `<strong>${doc.id}</strong>`;
-                                markCell.innerHTML = `<strong>${review.mark}</strong>`;
-                                opinionCell.innerHTML = `<strong>${review.opinion}</strong>`;
+            }
+    
+            function toggleUserReviews() {
+                const userReviews = document.getElementById('user-reviews');
+                if (userReviews.style.display === 'none') {
+                    showUserReviews();
+                } else {
+                    userReviews.style.display = 'none';
+                }
+            }
+    
+            function showUserReviews() {
+                var user = firebase.auth().currentUser;
+                if (user) {
+                    var reviewsTable = document.getElementById('reviews-table').getElementsByTagName('tbody')[0];
+                    reviewsTable.innerHTML = ''; // Clear existing reviews
+                    db.collection("reviews").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            var reviews = doc.data().reviews;
+                            reviews.forEach((review) => {
+                                if (review.uid === user.uid) {
+                                    var newRow = reviewsTable.insertRow();
+                                    var bookCell = newRow.insertCell(0);
+                                    var markCell = newRow.insertCell(1);
+                                    var opinionCell = newRow.insertCell(2);
+    
+                                    bookCell.innerHTML = `<strong>${doc.id}</strong>`;
+                                    markCell.innerHTML = `<strong>${review.mark}</strong>`;
+                                    opinionCell.innerHTML = `<strong>${review.opinion}</strong>`;
+                                }
+                            });
+                        });
+                        document.getElementById('user-reviews').style.display = 'block';
+                    }).catch((error) => {
+                        console.error("Error retrieving reviews: ", error);
+                    });
+                } else {
+                    alert("You must be logged in to see your reviews.");
+                }
+            }
+    
+            function searchReviewsByBook() {
+                const searchValue = document.getElementById('search-book').value.toLowerCase();
+                var user = firebase.auth().currentUser;
+                if (user) {
+                    var reviewsTable = document.getElementById('reviews-table').getElementsByTagName('tbody')[0];
+                    reviewsTable.innerHTML = ''; // Clear existing reviews
+                    db.collection("reviews").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            if (doc.id.toLowerCase().includes(searchValue)) {
+                                var reviews = doc.data().reviews;
+                                reviews.forEach((review) => {
+                                    if (review.uid === user.uid) {
+                                        var newRow = reviewsTable.insertRow();
+                                        var bookCell = newRow.insertCell(0);
+                                        var markCell = newRow.insertCell(1);
+                                        var opinionCell = newRow.insertCell(2);
+    
+                                        bookCell.innerHTML = `<strong>${doc.id}</strong>`;
+                                        markCell.innerHTML = `<strong>${review.mark}</strong>`;
+                                        opinionCell.innerHTML = `<strong>${review.opinion}</strong>`;
+                                    }
+                                });
                             }
                         });
+                        document.getElementById('user-reviews').style.display = 'block';
+                    }).catch((error) => {
+                        console.error("Error retrieving reviews: ", error);
                     });
-                    document.getElementById('user-reviews').style.display = 'block';
-                }).catch((error) => {
-                    console.error("Error retrieving reviews: ", error);
-                });
-            } else {
-                alert("You must be logged in to see your reviews.");
+                } else {
+                    alert("You must be logged in to search reviews.");
+                }
             }
-        }
-    </script>
-
-</body>
-</html>
+    
+            function searchReviewsByOpinion() {
+                const searchValue = document.getElementById('search-opinion').value.toLowerCase();
+                var user = firebase.auth().currentUser;
+                if (user) {
+                    var reviewsTable = document.getElementById('reviews-table').getElementsByTagName('tbody')[0];
+                    reviewsTable.innerHTML = ''; // Clear existing reviews
+                    db.collection("reviews").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            var reviews = doc.data().reviews;
+                            reviews.forEach((review) => {
+                                if (review.opinion.toLowerCase().includes(searchValue) && review.uid === user.uid) {
+                                    var newRow = reviewsTable.insertRow();
+                                    var bookCell = newRow.insertCell(0);
+                                    var markCell = newRow.insertCell(1);
+                                    var opinionCell = newRow.insertCell(2);
+    
+                                    bookCell.innerHTML = `<strong>${doc.id}</strong>`;
+                                    markCell.innerHTML = `<strong>${review.mark}</strong>`;
+                                    opinionCell.innerHTML = `<strong>${review.opinion}</strong>`;
+                                }
+                            });
+                        });
+                        document.getElementById('user-reviews').style.display = 'block';
+                    }).catch((error) => {
+                        console.error("Error retrieving reviews: ", error);
+                    });
+                } else {
+                    alert("You must be logged in to search reviews.");
+                }
+            }
+    
+            function searchReviewsByMark() {
+                const searchValue = document.getElementById('search-mark').value;
+                var user = firebase.auth().currentUser;
+                if (user) {
+                    var reviewsTable = document.getElementById('reviews-table').getElementsByTagName('tbody')[0];
+                    reviewsTable.innerHTML = ''; // Clear existing reviews
+                    db.collection("reviews").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            var reviews = doc.data().reviews;
+                            reviews.forEach((review) => {
+                                if (review.mark == searchValue && review.uid === user.uid) {
+                                    var newRow = reviewsTable.insertRow();
+                                    var bookCell = newRow.insertCell(0);
+                                    var markCell = newRow.insertCell(1);
+                                    var opinionCell = newRow.insertCell(2);
+    
+                                    bookCell.innerHTML = `<strong>${doc.id}</strong>`;
+                                    markCell.innerHTML = `<strong>${review.mark}</strong>`;
+                                    opinionCell.innerHTML = `<strong>${review.opinion}</strong>`;
+                                }
+                            });
+                        });
+                        document.getElementById('user-reviews').style.display = 'block';
+                    }).catch((error) => {
+                        console.error("Error retrieving reviews: ", error);
+                    });
+                } else {
+                    alert("You must be logged in to search reviews.");
+                }
+            }
+    
+            function clearSearch(fieldId) {
+                document.getElementById(fieldId).value = '';
+            }
+        </script>
+    
+    </body>
+    </html>
+    
