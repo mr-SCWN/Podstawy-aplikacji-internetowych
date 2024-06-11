@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crime books</title>
+    <title>And Then There Were None</title>
     <link rel="stylesheet" href="crime_books.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
 
 <body>
-
 <header>
     <h1>Library of books</h1>
     <h2>List of crime books</h2>
     <h4>Project was made as a project for the subject "Basics of Web Applications"</h4>
     <p class="cursive">Author: Ivan Kaliadzich</p>
 </header>
+
+<div id="user-info" class="user-info" style="display: none;">
+    <h3>Welcome, <span id="user-name"></span>!</h3>
+    <button onclick="logout()">Sign Out</button>
+</div>
 
 <div class="book-container">
     <div class="book-image">
@@ -24,16 +31,15 @@
         <h1 class="book-title">And Then There Were None</h1>
         <h2 class="book-author">Agatha Christie</h2>
         <p class="book-description">
-            <p>Agatha Christie’s masterpiece, and the best-selling murder mystery book of all time, celebrates its 80th birthday with this gorgeous hardback Special Edition.</p>
-            <p>‘We’re not going to leave the island. None of us will ever leave. It’s the end, you see – the end of everything…’</p>
-            <p>1939. Europe teeters on the brink of war. Ten strangers are invited to Soldier Island, an isolated rock near the Devon coast. Cut off from the mainland, with their generous hosts Mr and Mrs U.N. Owen mysteriously absent, they are each accused of a terrible crime. When one of the party dies suddenly they realise they may be harbouring a murderer among their number.</p>
-            <p>The 10 strangers include a reckless playboy, a troubled Harley Street doctor, a formidable judge, an uncouth detective, an unscrupulous mercenary, a God-fearing spinster, two restless servants, a highly decorated general and an anxious secretary. One by one they are picked off. Who will survive? And who is the killer? Copies of an ominous nursery rhyme hang in each room, the murders mimicking the awful fates of its ‘Ten Little Soldier Boys’.</p>
+            Agatha Christie’s masterpiece, and the best-selling murder mystery book of all time, celebrates its 80th birthday with this gorgeous hardback Special Edition.
+            ‘We’re not going to leave the island. None of us will ever leave. It’s the end, you see – the end of everything…’
+            1939. Europe teeters on the brink of war. Ten strangers are invited to Soldier Island, an isolated rock near the Devon coast. Cut off from the mainland, with their generous hosts Mr and Mrs U.N. Owen mysteriously absent, they are each accused of a terrible crime. When one of the party dies suddenly they realise they may be harbouring a murderer among their number.
+            The 10 strangers include a reckless playboy, a troubled Harley Street doctor, a formidable judge, an uncouth detective, an unscrupulous mercenary, a God-fearing spinster, two restless servants, a highly decorated general and an anxious secretary. One by one they are picked off. Who will survive? And who is the killer? Copies of an ominous nursery rhyme hang in each room, the murders mimicking the awful fates of its ‘Ten Little Soldier Boys’.
         </p>
     </div>
     <div class="book-purchase">
         <p class="book-price">62,85 zł</p>
-        <a href="https://www.amazon.pl/Then-There-Were-None/dp/0008328927" 
-        class="buy-button" target="_blank">Buy on Amazon</a>
+        <a href="https://www.amazon.pl/Then-There-Were-None/dp/0008328927" class="buy-button" target="_blank">Buy on Amazon</a>
     </div>
 </div>
 
@@ -42,27 +48,10 @@
     <h2>Submit Your Review</h2>
     <form id="reviewForm">
         <input type="hidden" id="bookId" name="bookId" value="and-then-there-were-none">
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" required><br>
-
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" required><br>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required pattern=".+@.+\..+"><br>
-
-        <label for="password">Password (min. 8 characters, at least one number, one uppercase letter and one lowercase letter):</label>
-        <input type="password" id="password" name="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"><br>
-
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required><br>
-
         <label for="mark">Mark (1-10):</label>
         <input type="number" id="mark" name="mark" min="1" max="10" required><br>
-
         <label for="opinion">Opinion:</label>
         <textarea id="opinion" name="opinion" required></textarea><br>
-
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -72,11 +61,10 @@
 <table id="reviewsTable" border="1">
     <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
             <th>Email</th>
             <th>Mark</th>
             <th>Opinion</th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -90,6 +78,157 @@
     </a>
 </div>
 
-<script src="script.js"></script>
+<script>
+    // Your Firebase configuration object
+    const firebaseConfig = {
+        apiKey: "AIzaSyA-WIh8GxieOvLfcsa0QrL29GgrJWLdoug",
+        authDomain: "bookslibrary-885e3.firebaseapp.com",
+        projectId: "bookslibrary-885e3",
+        storageBucket: "bookslibrary-885e3.appspot.com",
+        messagingSenderId: "767459073549",
+        appId: "1:767459073549:web:736693063c0ccd654cff44",
+        measurementId: "G-LVF1C9385Y"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Load reviews for all users
+    function loadReviews() {
+        let bookId = document.getElementById('bookId').value;
+        let reviewsRef = firebase.firestore().collection('reviews').doc(bookId);
+
+        reviewsRef.get().then((doc) => {
+            if (doc.exists) {
+                let reviews = doc.data().reviews;
+                let table = document.getElementById('reviewsTable').getElementsByTagName('tbody')[0];
+                table.innerHTML = ''; // Clear existing rows
+                let user = firebase.auth().currentUser;
+                reviews.forEach(review => {
+                    addReviewToTable(review, user && review.uid === user.uid);
+                });
+            }
+        });
+    }
+
+    // Check if the user is logged in when the page loads
+    firebase.auth().onAuthStateChanged((user) => {
+        loadReviews(); // Load reviews for all users
+
+        if (user) {
+            // User is signed in, show the user info
+            var username = user.email.split('@')[0]; // Assuming username is the part before '@'
+            document.getElementById('user-name').innerText = username;
+            document.getElementById('user-info').style.display = 'block';
+        } else {
+            document.getElementById('user-info').style.display = 'none';
+        }
+    });
+
+    document.getElementById('reviewForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let bookId = document.getElementById('bookId').value;
+        let mark = document.getElementById('mark').value;
+        let opinion = document.getElementById('opinion').value;
+        let user = firebase.auth().currentUser;
+
+        if (!user) {
+            alert('You must be logged in to submit a review!');
+            return;
+        }
+
+        let review = {
+            uid: user.uid,
+            mark: mark,
+            opinion: opinion,
+            email: user.email
+        };
+
+        saveReview(bookId, review);
+        document.getElementById('reviewForm').reset();
+    });
+
+    function saveReview(bookId, review) {
+        let reviewsRef = firebase.firestore().collection('reviews').doc(bookId);
+        reviewsRef.get().then((doc) => {
+            if (doc.exists) {
+                let reviews = doc.data().reviews;
+                let reviewIndex = reviews.findIndex(r => r.uid === review.uid);
+                if (reviewIndex !== -1) {
+                    reviews[reviewIndex] = review;
+                } else {
+                    reviews.push(review);
+                }
+                reviewsRef.set({ reviews: reviews });
+            } else {
+                reviewsRef.set({ reviews: [review] });
+            }
+            loadReviews();
+        });
+    }
+
+    function addReviewToTable(review, isCurrentUser) {
+        let table = document.getElementById('reviewsTable').getElementsByTagName('tbody')[0];
+        let newRow = table.insertRow();
+
+        let emailCell = newRow.insertCell(0);
+        let markCell = newRow.insertCell(1);
+        let opinionCell = newRow.insertCell(2);
+
+        emailCell.innerHTML = review.email;
+        markCell.innerHTML = review.mark;
+        opinionCell.innerHTML = review.opinion;
+
+        if (isCurrentUser) {
+            let editCell = newRow.insertCell(3);
+            editCell.innerHTML = '<button onclick="editReview(this)">Edit</button>';
+        } else {
+            newRow.insertCell(3).innerHTML = ''; // Empty cell for non-authors
+        }
+    }
+
+    function editReview(button) {
+        let row = button.parentNode.parentNode;
+        let markCell = row.cells[1];
+        let opinionCell = row.cells[2];
+
+        let newMark = prompt("Enter new mark:", markCell.innerHTML);
+        let newOpinion = prompt("Enter new opinion:", opinionCell.innerHTML);
+
+        if (newMark && newOpinion) {
+            markCell.innerHTML = newMark;
+            opinionCell.innerHTML = newOpinion;
+
+            let bookId = document.getElementById('bookId').value;
+            let user = firebase.auth().currentUser;
+
+            let reviewsRef = firebase.firestore().collection('reviews').doc(bookId);
+
+            reviewsRef.get().then((doc) => {
+                if (doc.exists) {
+                    let reviews = doc.data().reviews;
+                    let reviewIndex = reviews.findIndex(r => r.uid === user.uid);
+
+                    if (reviewIndex !== -1) {
+                        reviews[reviewIndex].mark = newMark;
+                        reviews[reviewIndex].opinion = newOpinion;
+
+                        reviewsRef.set({ reviews: reviews });
+                    }
+                }
+            });
+        }
+    }
+
+    function logout() {
+        firebase.auth().signOut().then(() => {
+            window.location.href = '../../main_page.html';  // Redirect to main page
+        }).catch((error) => {
+            console.error("Error signing out: ", error);
+        });
+    }
+</script>
+
 </body>
 </html>

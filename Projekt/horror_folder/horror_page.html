@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horror books</title>
     <link rel="stylesheet" href="horror_style.css">
-    
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
 
 <body>
@@ -14,9 +16,13 @@
         <h2>List of horror books</h2>
         <h4>Project was made as a project for the subject "Basics of Web Applications"</h4>
         <p class="cursive">Author: Ivan Kaliadzich</p>
-    </header>    
+    </header>
 
-    
+    <div id="user-info" class="user-info" style="display: none;">
+        <h3>Welcome, <span id="user-name"></span>!</h3>
+        <button onclick="logout()">Sign Out</button>
+    </div>
+
     <div class="book-list">
         <a href="all_books/The_Book_of_Bill.html" class="book-item">
             <img src="all_books/horror_pictures/The Book of Bill.jpg" alt="Book 1">
@@ -70,5 +76,38 @@
         </a>
     </div>
 
+    <script>
+        // Your Firebase configuration object
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-WIh8GxieOvLfcsa0QrL29GgrJWLdoug",
+            authDomain: "bookslibrary-885e3.firebaseapp.com",
+            projectId: "bookslibrary-885e3",
+            storageBucket: "bookslibrary-885e3.appspot.com",
+            messagingSenderId: "767459073549",
+            appId: "1:767459073549:web:736693063c0ccd654cff44",
+            measurementId: "G-LVF1C9385Y"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Check if the user is logged in when the page loads
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in, show the user info
+                var username = user.email.split('@')[0]; // Assuming username is the part before '@'
+                document.getElementById('user-name').innerText = username;
+                document.getElementById('user-info').style.display = 'block';
+            }
+        });
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = '../main_page.html';  // Redirect to main page
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+            });
+        }
+    </script>
 </body>
 </html>

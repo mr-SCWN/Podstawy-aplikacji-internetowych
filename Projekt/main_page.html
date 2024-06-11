@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
     <link rel="stylesheet" href="style.css">
-    
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
 
 <body>
@@ -28,7 +30,7 @@
 
         <div>
             <a href="horror_folder/horror_page.html">
-                <div>Horror</div>             
+                <div>Horror</div>
                 <img src="main_pictures/horror.webp" alt="Horror">
             </a>
         </div>
@@ -45,5 +47,139 @@
         Here you can choose one of 3 fictions, I believe you will find a book for you
     </h4>
 
+    <div id="login-form" class="form-container">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <button onclick="showSignUp()">Sign Up</button>
+    </div>
+
+    <div id="signup-form" class="form-container" style="display:none;">
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-username" placeholder="Username" required>
+        <input type="text" id="signup-firstname" placeholder="First Name" required>
+        <input type="text" id="signup-lastname" placeholder="Last Name" required>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <input type="password" id="signup-confirmpassword" placeholder="Confirm Password" required>
+        <button onclick="signUp()">Sign Up</button>
+        <button onclick="showLogin()">Back to Login</button>
+    </div>
+
+    <div id="welcome" style="display:none;">
+        <h2>Welcome, <span id="user-name"></span>!</h2>
+        <button onclick="logout()">Sign Out</button>
+    </div>
+
+    <script>
+        // Your Firebase configuration object
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-WIh8GxieOvLfcsa0QrL29GgrJWLdoug",
+            authDomain: "bookslibrary-885e3.firebaseapp.com",
+            projectId: "bookslibrary-885e3",
+            storageBucket: "bookslibrary-885e3.appspot.com",
+            messagingSenderId: "767459073549",
+            appId: "1:767459073549:web:736693063c0ccd654cff44",
+            measurementId: "G-LVF1C9385Y"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        // Check if the user is logged in when the page loads
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in, show the welcome message
+                var username = user.email.split('@')[0]; // Assuming username is the part before '@'
+                document.getElementById('user-name').innerText = username;
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('signup-form').style.display = 'none';
+                document.getElementById('welcome').style.display = 'block';
+            } else {
+                // No user is signed in, show the login form
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('signup-form').style.display = 'none';
+                document.getElementById('welcome').style.display = 'none';
+            }
+        });
+
+        function showSignUp() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+
+        function login() {
+            var username = document.getElementById('login-username').value;
+            var password = document.getElementById('login-password').value;
+
+            // Handle login with Firebase
+            firebase.auth().signInWithEmailAndPassword(username + "@example.com", password)
+                .then((userCredential) => {
+                    var user = userCredential.user;
+                    document.getElementById('user-name').innerText = username;
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('signup-form').style.display = 'none';
+                    document.getElementById('welcome').style.display = 'block';
+                })
+                .catch((error) => {
+                    console.error("Error logging in: ", error);
+                });
+        }
+
+        function signUp() {
+            var username = document.getElementById('signup-username').value;
+            var firstname = document.getElementById('signup-firstname').value;
+            var lastname = document.getElementById('signup-lastname').value;
+            var email = document.getElementById('signup-email').value;
+            var password = document.getElementById('signup-password').value;
+            var confirmpassword = document.getElementById('signup-confirmpassword').value;
+
+            if (password !== confirmpassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            // Handle sign up with Firebase
+            firebase.auth().createUserWithEmailAndPassword(username + "@example.com", password)
+                .then((userCredential) => {
+                    var user = userCredential.user;
+                    // Save user information in Firestore
+                    db.collection("users").doc(user.uid).set({
+                        username: username,
+                        firstname: firstname,
+                        lastname: lastname,
+                        email: email
+                    })
+                    .then(() => {
+                        document.getElementById('user-name').innerText = username;
+                        document.getElementById('login-form').style.display = 'none';
+                        document.getElementById('signup-form').style.display = 'none';
+                        document.getElementById('welcome').style.display = 'block';
+                    })
+                    .catch((error) => {
+                        console.error("Error saving user information: ", error);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error signing up: ", error);
+                });
+        }
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById('login-form').style.display = 'block';
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+            });
+        }
+    </script>
 </body>
 </html>
