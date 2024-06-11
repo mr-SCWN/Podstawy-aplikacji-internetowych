@@ -25,4 +25,4 @@ Projekt jest biblioteką książek, gdzie można przeczytać opis książki i na
 
 ## Live Demo
 
-[Click here to view the live application](https://mr-SCWN.github.io/Podstawy-aplikacji-internetowych/)
+[Click here to view the live application](https://mr-SCWN.github.io/Podstawy-aplikacji-internetowych/Projekt)
