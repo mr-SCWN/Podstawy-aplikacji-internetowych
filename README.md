@@ -4,7 +4,7 @@ Przedmiot służy jako wprowadzenie do świata aplikacji internetowych. Początk
 
 ### O projekcie:
 
-Projekt jest biblioteką książek z linkami do stron internetowych, gdzie można je kupić.
+Projekt jest biblioteką książek, gdzie można przeczytać opis książki i napisać recenzje, też jest możliwość zobaczyć ksiązke na stronie internetowej Amazon.
 
 ### Możliwości aplikacji:
 

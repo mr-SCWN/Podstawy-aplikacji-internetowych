@@ -83,7 +83,6 @@
         <img src="horror_pictures/back button.png" alt="Go Back">
     </a>
 </div>
-
 <script>
     // Your Firebase configuration object
     const firebaseConfig = {
@@ -189,8 +188,11 @@
         if (isCurrentUser) {
             let editCell = newRow.insertCell(3);
             editCell.innerHTML = '<button onclick="editReview(this)">Edit</button>';
+            let deleteCell = newRow.insertCell(4);
+            deleteCell.innerHTML = '<button onclick="deleteReview(this)">Delete</button>';
         } else {
             newRow.insertCell(3).innerHTML = ''; // Empty cell for non-authors
+            newRow.insertCell(4).innerHTML = ''; // Empty cell for non-authors
         }
     }
 
@@ -225,6 +227,28 @@
                 }
             });
         }
+    }
+
+    function deleteReview(button) {
+        let row = button.parentNode.parentNode;
+        let bookId = document.getElementById('bookId').value;
+        let user = firebase.auth().currentUser;
+
+        let reviewsRef = firebase.firestore().collection('reviews').doc(bookId);
+
+        reviewsRef.get().then((doc) => {
+            if (doc.exists) {
+                let reviews = doc.data().reviews;
+                let reviewIndex = reviews.findIndex(r => r.uid === user.uid);
+
+                if (reviewIndex !== -1) {
+                    reviews.splice(reviewIndex, 1); // Remove the review
+                    reviewsRef.set({ reviews: reviews }).then(() => {
+                        loadReviews(); // Reload the reviews
+                    });
+                }
+            }
+        });
     }
 
     function logout() {
