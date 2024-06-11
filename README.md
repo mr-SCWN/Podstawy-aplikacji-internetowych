@@ -21,8 +21,3 @@ Projekt jest biblioteką książek, gdzie można przeczytać opis książki i na
 * Pisanie, edycja i usuwanie recenzji dla każdej książki (jeżeli użytkownik jest zalogowany/zarejestrowany)
 
 * System umożliwia zalogowanym użytkownikom wyświetlanie wszystkich recenzji, ktore oni napisali
-
-
-## Live Demo
-
-[Click here to view the live application](https://mr-SCWN.github.io/Podstawy-aplikacji-internetowych/Projekt)
