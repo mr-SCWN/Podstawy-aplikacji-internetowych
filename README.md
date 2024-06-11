@@ -6,7 +6,7 @@ Przedmiot służy jako wprowadzenie do świata aplikacji internetowych. Początk
 
 Projekt jest biblioteką książek z linkami do stron internetowych, gdzie można je kupić.
 
-###Możliwości aplikacji:
+### Możliwości aplikacji:
 
 * Logowanie i tworzenie konta użytkownika
 
